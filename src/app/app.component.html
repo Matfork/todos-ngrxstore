@@ -10,10 +10,10 @@
     <ul class="todo-list">
       <!-- These are here just to show the structure of the list items -->
       <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-      <li *ngFor="let todo of todos" [class.completed]="todo.completed">
+      <li *ngFor="let todo of todos" [ngClass]="{'completed': todo.completed, 'editing': todo.editing}">
         <div class="view">
           <input class="toggle" type="checkbox" [checked]="todo.completed" (change)="onChange(todo)">
-          <label>{{todo.name}}</label>
+          <label (dblclick)="edit(todo)">{{todo.name}}</label>
           <button class="destroy" (click)="remove(todo)"></button>
         </div>
         <input class="edit" value="{{todo.name}}">
@@ -36,31 +36,25 @@
       </li-->
     </ul>
   </section>
-  <!-- This footer should hidden by default and shown when there are todos -->
   <footer class="footer">
-    <!-- This should be `0 items left` by default -->
     <span class="todo-count"><strong>{{pendingsCount$ | async}}</strong> item left</span>
     <!-- Remove this if you don't implement routing -->
     <ul class="filters">
       <li>
-        <a [ngClass]="{'selected': viewId === 0 }" href="#/" (click)="showView(0)">All</a>
+        <a [ngClass]="{'selected': viewId === ViewTypes.SHOW_ALL }" href="#/" (click)="showView(ViewTypes.SHOW_ALL)">All</a>
       </li>
       <li>
-        <a [ngClass]="{'selected': viewId === 1 }" href="#/active" (click)="showView(1)">Active</a>
+        <a [ngClass]="{'selected': viewId === ViewTypes.SHOW_ACTIVE }" href="#/active" (click)="showView(ViewTypes.SHOW_ACTIVE)">Active</a>
       </li>
       <li>
-        <a [ngClass]="{'selected': viewId === 2 }" href="#/completed" (click)="showView(2)">Completed</a>
+        <a [ngClass]="{'selected': viewId === ViewTypes.SHOW_COMPLETED }" href="#/completed" (click)="showView(ViewTypes.SHOW_COMPLETED)">Completed</a>
       </li>
     </ul>
-    <!-- Hidden if no completed items are left ↓ -->
-    <button class="clear-completed">Clear completed</button>
+    <button *ngIf="(completedCount$ | async) !== 0" class="clear-completed" (click)="clearCompleted()">Clear completed</button>
   </footer>
 </section>
 <footer class="info">
   <p>Double-click to edit a todo</p>
-  <!-- Remove the below line ↓ -->
-  <p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
-  <!-- Change this out with your name and url ↓ -->
-  <p>Created by <a href="http://todomvc.com">you</a></p>
+  <p>Created by <a href="https://github.com/rdcorbera/todos-ngrxstore">Ricardo Corbera</a></p>
   <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 </footer>

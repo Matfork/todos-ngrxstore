@@ -1,21 +1,20 @@
 import { Actions, AppState, Model, State } from 'ngrx-domains';
-import { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } from './model';
 
 export function reducer(state: AppState = State.app, action: any): AppState {
   switch(action.constructor) {
     case Actions.app.AddTodoAction: {
       const text: string = action.payload;
       return Object.assign({}, state, {
-        todos: [...state.todos, { id: (new Date).getTime().toString(), name: text, completed: false }]
+        todos: [...state.todos, { id: (new Date).getTime().toString(), name: text, editing: false, completed: false }]
       });
     }
 
     case Actions.app.ChangeTodoAction: {
       let todo: Model.Todo = action.payload;
-      let index = state.todos.findIndex((item, index) => item.id == todo.id);
+      let index = state.todos.findIndex((item) => item.id == todo.id);
       let todos = state.todos.filter((item) => item.id !== todo.id);
       
-      todos.splice(index, 0, { id: (new Date).getTime().toString(), name: todo.name, completed: !todo.completed });
+      todos.splice(index, 0, Object.assign({}, todo, { completed: !todo.completed }));
 
       return Object.assign({}, state, { todos: todos });
     }
@@ -31,20 +30,28 @@ export function reducer(state: AppState = State.app, action: any): AppState {
       return Object.assign({}, state, { todos: todos, marked: marked });
     }
 
+    case Actions.app.ClearCompletedAction: {
+      return Object.assign({}, state, { todos: state.todos.filter((t) => !t.completed )});
+    }
+
+    case Actions.app.EditInitAction: {
+      let todo: Model.Todo = action.payload;
+      let index = state.todos.findIndex((item) => item.id == todo.id);
+      let todos = state.todos.filter((item) => item.id !== todo.id);
+      
+      todos.splice(index, 0, Object.assign({}, todo, { editing: true }));
+
+      return Object.assign({}, state, { todos: todos });
+    }
+
     case Actions.app.RemoveTodoAction: {
       const todo: Model.Todo = action.payload;
 
       return Object.assign({}, state, { todos: state.todos.filter((t) => t.id !== todo.id) });
     }
 
-    case Actions.app.ShowViewAction: {
-      const view: number = action.payload;      
-      return Object.assign({}, state, {
-        showAll: SHOW_ALL === view,
-        showActive: SHOW_ACTIVE === view,
-        showCompleted: SHOW_COMPLETED === view,
-        view: view
-      })
+    case Actions.app.ShowViewAction: {  
+      return Object.assign({}, state, { view: action.payload })
     }
 
     default: return state;

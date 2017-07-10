@@ -2,15 +2,17 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Store } from '@ngrx/store';
 import { Actions, State, Queries, Model } from 'ngrx-domains';
+import { VIEW_TYPES as ViewTypes } from './domains/model';
 
 import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'todo-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
+  private ViewTypes: any = ViewTypes;
+
   private text: string;
 
   private text$: Observable<string>;
@@ -18,6 +20,7 @@ export class AppComponent {
   private pendings$: Observable<Model.Todo[]>;
   private completeds$: Observable<Model.Todo[]>;
   private pendingsCount$: Observable<number>;
+  private completedCount$: Observable<number>;
   private view$: Observable<number>;
 
   private todos: Model.Todo[];
@@ -33,6 +36,7 @@ export class AppComponent {
     this.pendings$ = store.select(Queries.app.getTodosPendings);
     this.completeds$ = store.select(Queries.app.getTodosCompleted);
     this.pendingsCount$ = store.select(Queries.app.getPendingCount);
+    this.completedCount$ = store.select(Queries.app.getCompletedCount);
     this.view$ = store.select(Queries.app.getView);
 
     this.todos$.subscribe((list) => { this.all = list; this.refreshView(); });
@@ -58,6 +62,10 @@ export class AppComponent {
     this.store.dispatch(new Actions.app.ChangeTodoAction(todo));
   }
 
+  private edit(todo: Model.Todo): void {
+    this.store.dispatch(new Actions.app.EditInitAction(todo));
+  }
+
   private remove(todo: Model.Todo): void {
     this.store.dispatch(new Actions.app.RemoveTodoAction(todo));
   }
@@ -66,11 +74,15 @@ export class AppComponent {
     this.store.dispatch(new Actions.app.ShowViewAction(index));
   }
 
+  private clearCompleted(): void {
+    this.store.dispatch(new Actions.app.ClearCompletedAction());
+  }
+
   private refreshView(): void {
     switch(this.viewId) {
-      case 0: this.todos = this.all; break;
-      case 1: this.todos = this.pendings; break;
-      case 2: this.todos = this.completeds; break;
+      case ViewTypes.SHOW_ALL: this.todos = this.all; break;
+      case ViewTypes.SHOW_ACTIVE: this.todos = this.pendings; break;
+      case ViewTypes.SHOW_COMPLETED: this.todos = this.completeds; break;
     }
   }
 }

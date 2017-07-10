@@ -7,9 +7,7 @@ export interface AppQueries {
   getTodosPendings: Query<Model.Todo[]>;
   getTodosCompleted: Query<Model.Todo[]>;
   getPendingCount: Query<number>;
-  getShowAll: Query<boolean>;
-  getShowActive: Query<boolean>;
-  getShowCompleted: Query<boolean>;
+  getCompletedCount: Query<number>;
   getView: Query<number>;
 }
 
@@ -28,8 +26,6 @@ Queries.app = {
   getTodosPendings: fromRoot(state => state.todos.filter((item) => !item.completed)),
   getTodosCompleted: fromRoot(state => state.todos.filter((item) => item.completed)),
   getPendingCount: fromRoot(state => state.todos.filter((item) => !item.completed).length),
-  getShowAll: fromRoot(state => state.showAll),
-  getShowActive: fromRoot(state => state.showActive),
-  getShowCompleted: fromRoot(state => state.showCompleted),
+  getCompletedCount: fromRoot(state => state.todos.filter((item) => item.completed).length),
   getView: fromRoot(state => state.view)
 };

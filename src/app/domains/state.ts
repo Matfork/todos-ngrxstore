@@ -5,9 +5,6 @@ declare module 'ngrx-domains' {
   export interface AppState {
     todos: Model.Todo[];
     marked: boolean;
-    showAll: boolean;
-    showActive: boolean;
-    showCompleted: boolean;
     view: number;
   }
 
@@ -19,8 +16,5 @@ declare module 'ngrx-domains' {
 State.app = {
   todos: [],
   marked: false,
-  showAll: true,
-  showActive: false,
-  showCompleted: false,
   view: 0
 };

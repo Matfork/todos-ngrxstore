@@ -1,12 +1,15 @@
 export interface _Todo {
   id: string;
   name: string;
+  editing: boolean;
   completed: boolean;
 }
 
-export const SHOW_ALL: number = 0;
-export const SHOW_ACTIVE: number = 1;
-export const SHOW_COMPLETED: number = 2;
+export const VIEW_TYPES = { 
+  SHOW_ALL: 0, 
+  SHOW_ACTIVE: 1, 
+  SHOW_COMPLETED: 2 
+};
 
 declare module 'ngrx-domains' {
   export namespace Model {
