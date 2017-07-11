@@ -7,6 +7,7 @@ export const ActionTypes = {
   CHANGE_TODO:      '[Todos] Change Todo',
   CLEAR_COMPLETED:  '[Todos] Clear Completed',
   EDIT_INIT:        '[Todos] Edit Init',
+  EDIT_SAVE:        '[Todos] Edit Save',
   REMOVE_TODO:      '[Todos] Remove Todo',
   SHOW_VIEW:        '[Todos] Show view'
 };
@@ -41,6 +42,12 @@ export class EditInitAction implements Action {
   constructor(public payload: Model.Todo) { } 
 }
 
+export class EditSaveAction implements Action {
+  type = ActionTypes.EDIT_SAVE;
+
+  constructor(public payload: any) { }
+}
+
 export class RemoveTodoAction implements Action {
   type = ActionTypes.REMOVE_TODO;
 
@@ -62,6 +69,7 @@ declare module 'ngrx-domains' {
       ChangeTodoAction: typeof ChangeTodoAction;
       ClearCompletedAction: typeof ClearCompletedAction;
       EditInitAction: typeof EditInitAction;
+      EditSaveAction: typeof EditSaveAction;
       RemoveTodoAction: typeof RemoveTodoAction;
       ShowViewAction: typeof ShowViewAction;
     }
@@ -75,6 +83,7 @@ Actions.app = {
   ChangeTodoAction,
   ClearCompletedAction,
   EditInitAction,
+  EditSaveAction,
   RemoveTodoAction,
   ShowViewAction
 };

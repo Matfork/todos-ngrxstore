@@ -6,12 +6,14 @@ import './domains';
 import { StoreModule } from '@ngrx/store';
 
 import { AppComponent } from './app.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 import { reducer } from './reducer';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule,

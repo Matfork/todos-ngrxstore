@@ -40,8 +40,8 @@ export class AppComponent {
     this.view$ = store.select(Queries.app.getView);
 
     this.todos$.subscribe((list) => { this.all = list; this.refreshView(); });
-    this.pendings$.subscribe((list) => { this.pendings = list; this.refreshView(); });
-    this.completeds$.subscribe((list) => { this.completeds = list; this.refreshView(); });
+    this.pendings$.subscribe((list) => this.pendings = list);
+    this.completeds$.subscribe((list) => this.completeds = list);
     
     this.view$.subscribe((viewId) => {
       this.viewId = viewId;
@@ -64,6 +64,10 @@ export class AppComponent {
 
   private edit(todo: Model.Todo): void {
     this.store.dispatch(new Actions.app.EditInitAction(todo));
+  }
+
+  private saveEdit(todo: Model.Todo, text: string): void {
+    this.store.dispatch(new Actions.app.EditSaveAction({ todo: todo, text: text }));
   }
 
   private remove(todo: Model.Todo): void {

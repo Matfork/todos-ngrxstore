@@ -44,6 +44,18 @@ export function reducer(state: AppState = State.app, action: any): AppState {
       return Object.assign({}, state, { todos: todos });
     }
 
+    case Actions.app.EditSaveAction: {
+      let todo: Model.Todo = action.payload.todo;
+      let text: string = action.payload.text;
+
+      let index = state.todos.findIndex((item) => item.id == todo.id);
+      let todos = state.todos.filter((item) => item.id !== todo.id);
+      
+      todos.splice(index, 0, Object.assign({}, todo, { name: text, editing: false }));
+
+      return Object.assign({}, state, { todos: todos });
+    }
+
     case Actions.app.RemoveTodoAction: {
       const todo: Model.Todo = action.payload;
 
